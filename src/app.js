@@ -51,7 +51,25 @@ app.post('/tweets', (req, res) => {
   res.status(201).send('OK');
 })
 
+app.get('/tweets', (req, res) => {
+  const lastTweets = tweets.slice(-10);
 
+  if (tweets.length === 0) {
+    return res.send([]);
+  }
+
+  const getTweets = lastTweets.map(t => {
+    const user = users.find(u => u.username === t.username);
+
+    return {
+      username: user.username,
+      avatar: user.avatar,
+      tweet: t.tweet
+    };
+  });
+
+  res.status(200).send(getTweets);
+})
 
 const PORT = 5000;
 app.listen(PORT, ()=>console.log(`server running at port ${PORT}`));
